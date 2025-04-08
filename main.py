@@ -1,86 +1,52 @@
-from tkinter import *
-from datetime import datetime
-from tkcalendar import DateEntry
-"""
-сделать ввод даты, проверку на текущую дату и изменение свежести
-привязать всё к БД
-"""
-
-
-class Fruits:
-    def __init__(self, _name, _fresh, _weight):
-        self.name = _name
-        self.fresh = _fresh
-        self.weight = _weight
-
-    def __str__(self):
-        return f"Название:{self.name},свежесть:{self.fresh},вес:{self.weight}"
-
-
-class App:
+import random
+#переложить в интерфейс
+class Player:
     def __init__(self):
-        self.today = datetime.today().date()
-        print(self.today)
-        self.fruit_list = []
-        self.win = Tk()
-        self.win.title("Склад")
-        self.win.geometry("600x400")
-        self.fruit_name_label = Label(text="Название:")
-        self.fruit_fresh_label = Label(text="Свежесть:")
-        self.fruit_weight_label = Label(text="Вес:")
-        self.fruit_date = Label(text="Дата поставки: ")
-        self.name_entry = Entry()
-        self.fresh_entry = Entry()
-        self.weight_entry = Entry()
-        self.btn = Button(text="Добавить")
-        self.btn.bind('<Button>', self.add_fruit, add=None)
-        self.date_picker = DateEntry(width=12, background='darkblue', foreground='white', borderwidth=2)
+        self.HP = 10
+        self.defence = 0
+        self.atk = 0
 
-        self.fruit_var = Variable(value=self.fruit_list)
-        self.fruit_view = Listbox(listvariable=self.fruit_var, width=50)
-        self.fruit_view.grid(row=0, column=2, rowspan=5)
+    def change_HP(self):
+        self.HP -= 1
 
-        self.fruit_name_label.grid(row=0, column=0)
-        self.fruit_fresh_label.grid(row=1, column=0)
-        self.fruit_weight_label.grid(row=2, column=0)
-        self.fruit_date.grid(row=3, column=0)
-        self.name_entry.grid(row=0,column=1)
-        self.fresh_entry.grid(row=1, column=1)
-        self.weight_entry.grid(row=2, column=1)
-        self.date_picker.grid(row=3,column=1)
-        self.btn.grid(row=4, column=0, columnspan=2)
+    def change_def(self, _pos):
+        self.defence = _pos
 
-        self.win.mainloop()
-
-    def add_fruit(self, event):
-        fruit = Fruits(self.name_entry.get(),
-                       self.fresh_entry.get(),
-                       self.weight_entry.get())
-        self.fruit_list.append(fruit)
-        self.fruit_var.set(self.fruit_list)
-
-        print((self.date_picker.get_date()-self.today).days)
-
-        print(self.name_entry.get())
-        print(self.fresh_entry.get())
-        print(self.weight_entry.get())
+    def change_atk(self, _pos):
+        self.atk = _pos
 
 
-myApp = App()
+class Goblin:
+    def __init__(self):
+        self.HP = 10
+        self.defence = 0
+        self.atk = 0
 
+    def change_HP(self):
+        self.HP -= 1
 
-"""
-https://github.com/leonid1123/pk111-2025
-Склад мобильных телефонов.
-класс с 4 параметрами.
-сделать приложение для внесения позиций
-на склад.
-на оценку!
-"""
+    def change_def(self):
+        self.defence = random.randint(1,3)
 
+    def change_atk(self):
+        self.atk = random.randint(1,3)
 
-
-
-
-
-
+player = Player()
+goblin = Goblin()
+while True:
+    player_atk_pos = input("позиция атаки(1,2,3)")
+    player_atk_pos = int(player_atk_pos)
+    player_def_pos = input("позиция защиты(1,2,3)")
+    player_def_pos = int(player_def_pos)
+    player.change_atk(player_atk_pos)
+    player.change_def(player_def_pos)
+    goblin.change_def()
+    goblin.change_atk()
+    if goblin.defence != player.atk:
+        goblin.change_HP()
+    if player.defence != goblin.atk:
+        player.change_HP()
+    print(f"Player HP {player.HP}, Def:{player.defence},Atk:{player.atk}")
+    print(f"Goblin HP {goblin.HP}, Def:{goblin.defence},Atk:{goblin.atk}")
+    if player.HP<1 or goblin.HP<1:
+        break

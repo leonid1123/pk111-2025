@@ -53,7 +53,7 @@ class App:
 
     def update_messages(self):
         self.get_messages()
-        self.win.after(5000, self.update_messages)
+        self.win.after(1000, self.update_messages)
 
 
 app = App()
